@@ -1,3 +1,5 @@
 {
-    "dotnet.defaultSolution": "DatingApp.sln"
+    "dotnet.defaultSolution": "DatingApp.sln",
+    "editor.detectIndentation": false,
+    "editor.tabSize": 4
 }
