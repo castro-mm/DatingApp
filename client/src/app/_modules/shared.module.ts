@@ -5,6 +5,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { MemberDetailComponent } from '../members/member-detail/member-detail.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { FileUploadModule } from 'ng2-file-upload';
 
 @NgModule({
     declarations: [],
@@ -14,14 +15,16 @@ import { NgxSpinnerModule } from 'ngx-spinner';
         BsDropdownModule.forRoot(),
         ToastrModule.forRoot({positionClass: 'toast-bottom-right'}),
         TabsModule.forRoot(),
-        NgxSpinnerModule.forRoot({ type: 'pacman' })
+        NgxSpinnerModule.forRoot({ type: 'line-scale-party' }),
+        FileUploadModule
     ],
     exports: [
         BsDropdownModule,
         ToastrModule,
         TabsModule,
         MemberDetailComponent,
-        NgxSpinnerModule
+        NgxSpinnerModule,
+        FileUploadModule
     ]
 })
 

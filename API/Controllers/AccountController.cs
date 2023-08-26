@@ -1,6 +1,4 @@
-﻿using System;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
+﻿using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using API.Data;
@@ -43,14 +41,15 @@ public class AccountController : BaseApiController
         return new UserDto
         {
             Username = user.UserName,
-            Token = this._tokenService.CreateToken(user)
+            Token = this._tokenService.CreateToken(user),
+            PhotoUrl = user.Photos.Find(x => x.IsMain)?.Url
         };
     }
 
     [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Login(LoginDto loginDto) 
     {
-        var user = await _context.Users.SingleOrDefaultAsync(p => p.UserName == loginDto.Username);
+        var user = await _context.Users.Include(p => p.Photos).SingleOrDefaultAsync(p => p.UserName == loginDto.Username);
 
         if (user == null) return Unauthorized("Invalid User");
 
@@ -66,7 +65,8 @@ public class AccountController : BaseApiController
         return new UserDto
         {
             Username = user.UserName,
-            Token = this._tokenService.CreateToken(user)
+            Token = this._tokenService.CreateToken(user),
+            PhotoUrl = user.Photos.Find(x => x.IsMain)?.Url
         };
     }
 
