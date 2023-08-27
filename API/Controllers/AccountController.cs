@@ -5,6 +5,7 @@ using API.Data;
 using API.DTO;
 using API.Entities;
 using API.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,9 +15,11 @@ public class AccountController : BaseApiController
 {
     private readonly DataContext _context;
     private readonly ITokenService _tokenService;
+    public IMapper _mapper { get; }
 
-    public AccountController(DataContext context, ITokenService tokenService)
+    public AccountController(DataContext context, ITokenService tokenService, IMapper mapper)
     {
+        this._mapper = mapper;
         this._context = context;
         this._tokenService = tokenService;
     }
@@ -26,14 +29,13 @@ public class AccountController : BaseApiController
     {
         if (await UserExists(registerDto.Username)) return BadRequest("Username is taken");
 
+        var user = this._mapper.Map<AppUser>(registerDto);
+
         using var hmac = new HMACSHA512();
 
-        var user = new AppUser 
-        {
-            UserName = registerDto.Username.ToLower(),
-            PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-            PasswordSalt = hmac.Key // User Cypher Key. Each user has a specific key to decode his password.
-        };
+        user.UserName = registerDto.Username.ToLower();
+        user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
+        user.PasswordSalt = hmac.Key; // User Cypher Key. Each user has a specific key to decode his password.
 
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
@@ -42,7 +44,8 @@ public class AccountController : BaseApiController
         {
             Username = user.UserName,
             Token = this._tokenService.CreateToken(user),
-            PhotoUrl = user.Photos.Find(x => x.IsMain)?.Url
+            PhotoUrl = user.Photos.Find(x => x.IsMain)?.Url,
+            KnownAs = user.KnownAs
         };
     }
 
@@ -66,7 +69,8 @@ public class AccountController : BaseApiController
         {
             Username = user.UserName,
             Token = this._tokenService.CreateToken(user),
-            PhotoUrl = user.Photos.Find(x => x.IsMain)?.Url
+            PhotoUrl = user.Photos.Find(x => x.IsMain)?.Url,
+            KnownAs = user.KnownAs
         };
     }
 
