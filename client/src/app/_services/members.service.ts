@@ -7,6 +7,8 @@ import { PaginatedResult } from '../_models/pagination';
 import { UserParams } from '../_models/userParams';
 import { AccountService } from './account.service';
 import { User } from '../_models/user';
+import { BaseParams } from '../_models/baseParams';
+import { LikeParams } from '../_models/likeParams';
 
 @Injectable({
     providedIn: 'root'
@@ -54,7 +56,7 @@ export class MembersService {
         if (response) return of(response);
 
         let params = this.getPaginationHeaders(userParams);
-        
+      
         return this.getPaginatedResult<Member[]>(this.baseApiUrl + 'users/', params).pipe(
             map(response => {
                 this.memberCache.set(Object.values(userParams).join('-'), response);
@@ -90,6 +92,19 @@ export class MembersService {
         return this.http.delete(this.baseApiUrl + 'users/delete-photo/' + photoId);
     }
 
+    addLike(username: string) {
+        return this.http.post(this.baseApiUrl + 'likes/' + username, {});
+    }
+
+    getLikes(likeParams: LikeParams) {
+
+        let params = this.getPaginationHeaders(likeParams);
+      
+        return this.getPaginatedResult<Member[]>(this.baseApiUrl + 'likes/', params);
+
+        //return this.http.get<Member[]>(this.baseApiUrl + 'likes/?predicate=' + predicate);
+    }
+
     private getPaginatedResult<T>(url: string, params: HttpParams) {
 
         const paginatedResult: PaginatedResult<T> = new PaginatedResult<T>();
@@ -107,19 +122,8 @@ export class MembersService {
         );
     }
 
-    private getPaginationHeaders(userParams: UserParams): HttpParams {
+    private getPaginationHeaders(params: any): HttpParams {
 
-        return new HttpParams ({
-            fromObject: {
-                pageNumber: userParams.pageNumber,
-                pageSize: userParams.pageSize,
-                orderBy: userParams.orderBy,
-                gender: userParams.gender === null ? '' : userParams.gender,
-                minAge: userParams.minAge === null ? '' : userParams.minAge,
-                maxAge: userParams.minAge === null ? '' : userParams.minAge,
-            }
-        })       
-
-        //params = new HttpParams({fromString: `pageNumber=${pageNumber}&pageSize=${pageSize}`});
+        return new HttpParams({fromObject: {...params}});       
     }
 }
