@@ -10,10 +10,14 @@ namespace API.Helpers
     {
         public AutoMapperProfiles()
         {
-            // Map Entity to Dto and, at the configure the property PhotoUrl of MemberDto to receive the Url's reference from Photos
+            // Map Entity to Dto and configure the property PhotoUrl of MemberDto to receive the Url's reference from Photos
             CreateMap<AppUser, MemberDto>()
                 .ForMember(dest => dest.PhotoUrl, options => options.MapFrom(src => src.Photos.FirstOrDefault(x => x.IsMain).Url))
                 .ForMember(dest => dest.Age, options => options.MapFrom(src => src.DateOfBirth.CalculateAge()));
+
+            CreateMap<Message, MessageDto>()
+                .ForMember(dest => dest.SenderPhotoUrl, options => options.MapFrom(src => src.Sender.Photos.FirstOrDefault(x => x.IsMain).Url))
+                .ForMember(dest => dest.RecipientPhotoUrl, options => options.MapFrom(src => src.Recipient.Photos.SingleOrDefault(x => x.IsMain).Url));
 
             CreateMap<Photo, PhotoDto>();
 
