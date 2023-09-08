@@ -27,6 +27,11 @@ namespace API.Data
             return await this._context.Users.Include(p => p.Photos).SingleOrDefaultAsync(x => x.UserName == username);
         }
 
+        public async Task<string> GetUserGender(string username)
+        {
+            return await this._context.Users.Where(x => x.UserName == username).Select(s => s.Gender).FirstOrDefaultAsync();
+        }
+
         public async Task<PagedList<AppUser>> GetUsersAsync(UserParams userParams)
         {
             var query = this._context.Users.Include(p => p.Photos).AsQueryable();
@@ -48,11 +53,6 @@ namespace API.Data
             };
 
             return await PagedList<AppUser>.CreateAsync(query, userParams.PageNumber, userParams.PageSize);
-        }
-
-        public async Task<bool> SaveAllAsync()
-        {
-            return await this._context.SaveChangesAsync() > 0;
         }
 
         public void Update(AppUser user)

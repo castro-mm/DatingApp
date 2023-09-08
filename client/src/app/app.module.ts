@@ -31,10 +31,11 @@ import { PhotoManagementComponent } from './admin/photo-management/photo-managem
 import { RolesModalComponent } from './modals/roles-modal/roles-modal.component';
 import { RouteReuseStrategy } from '@angular/router';
 import { CustomRouteReuseStrategy } from './_services/customRouteReuseStrategy';
+import { ConfirmDialogComponent } from './modals/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
     declarations: [    
-        AppComponent, NavComponent, HomeComponent,RegisterComponent, MemberListComponent, ListsComponent, MessagesComponent, TestErrorComponent, NotFoundComponent, ServerErrorComponent, MemberCardComponent, MemberEditComponent, PhotoEditorComponent, TextInputComponent, DatePickerComponent, AdminPanelComponent, HasRoleDirective, HasRoleDirective, UserManagementComponent, PhotoManagementComponent, RolesModalComponent],
+        AppComponent, NavComponent, HomeComponent,RegisterComponent, MemberListComponent, ListsComponent, MessagesComponent, TestErrorComponent, NotFoundComponent, ServerErrorComponent, MemberCardComponent, MemberEditComponent, PhotoEditorComponent, TextInputComponent, DatePickerComponent, AdminPanelComponent, HasRoleDirective, HasRoleDirective, UserManagementComponent, PhotoManagementComponent, RolesModalComponent, ConfirmDialogComponent],
     imports: [    
         BrowserModule,
         AppRoutingModule,
