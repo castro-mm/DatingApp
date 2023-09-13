@@ -19,12 +19,16 @@ namespace API.Data
 
         public async Task<AppUser> GetUserByIdAsync(int id)
         {
-            return await this._context.Users.FindAsync(id);
+            //return await this._context.Users.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == id);
+            return await this._context.Users.IgnoreQueryFilters().SingleOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<AppUser> GetUserByUsernameAsync(string username)
         {
-            return await this._context.Users.Include(p => p.Photos).SingleOrDefaultAsync(x => x.UserName == username);
+            return await this._context.Users
+                .IgnoreQueryFilters()
+                .Include(p => p.Photos)
+                .SingleOrDefaultAsync(x => x.UserName == username);
         }
 
         public async Task<string> GetUserGender(string username)

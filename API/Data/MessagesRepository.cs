@@ -38,9 +38,9 @@ namespace API.Data
             this._dataContext.Messages.Remove(message);
         }
 
-        public async Task<Connection> GetConnection(string connecionId)
+        public async Task<Connection> GetConnection(string connectionId)
         {
-            return await this._dataContext.Connections.FindAsync(connecionId);
+            return await this._dataContext.Connections.FindAsync(connectionId);
         }
 
         public async Task<Group> GetGroupForConnection(string connectionId)

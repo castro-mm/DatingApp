@@ -21,9 +21,12 @@ namespace API.Helpers
                 .ForMember(dest => dest.RecipientPhotoUrl, options => options.MapFrom(src => src.Recipient.Photos.SingleOrDefault(x => x.IsMain).Url));
 
             CreateMap<Photo, PhotoDto>();
+            CreateMap<Photo, PhotoForApprovalDto>()
+                .ForMember(dest => dest.Username, options => options.MapFrom(src => src.AppUser.UserName));
 
             CreateMap<MemberUpdateDto, AppUser>();
             CreateMap<RegisterDto, AppUser>();
+
             CreateMap<DateTime, DateTime>().ConvertUsing(d => DateTime.SpecifyKind(d, DateTimeKind.Utc));
             CreateMap<DateTime?, DateTime?>().ConvertUsing(d => d.HasValue ? DateTime.SpecifyKind(d.Value, DateTimeKind.Utc) : null);
         }

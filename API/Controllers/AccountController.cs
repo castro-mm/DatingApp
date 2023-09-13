@@ -56,7 +56,10 @@ public class AccountController : BaseApiController
     [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Login(LoginDto loginDto) 
     {
-        var user = await this._userManager.Users.Include(p => p.Photos).SingleOrDefaultAsync(p => p.UserName == loginDto.Username);
+        var user = await this._userManager.Users
+            .IgnoreQueryFilters()
+            .Include(p => p.Photos)
+            .SingleOrDefaultAsync(p => p.UserName == loginDto.Username);
 
         if (user == null) return Unauthorized("Invalid User");
 

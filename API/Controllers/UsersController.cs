@@ -85,9 +85,11 @@ public class UsersController : BaseApiController
         var photo = new Photo
         {
             Url = result.SecureUrl.AbsoluteUri,
-            PublicId = result.PublicId
+            PublicId = result.PublicId,
+            IsApproved = false
         };
-        photo.IsMain = user.Photos.Count == 0;
+
+        //photo.IsMain = user.Photos.Count == 0;
 
         user.Photos.Add(photo);
 
@@ -122,9 +124,7 @@ public class UsersController : BaseApiController
     [HttpDelete("delete-photo/{photoId}")]
     public async Task<ActionResult> DeletePhoto(int photoId) 
     {
-        var user = await this._unityOfWork.UserRepository.GetUserByUsernameAsync(User.GetUsername());
-
-        var photo = user.Photos.FirstOrDefault(p => p.Id == photoId);
+        var photo = await this._unityOfWork.PhotoRepository.GetPhotoById(photoId);
 
         if (photo == null) return NotFound();
 
@@ -136,7 +136,8 @@ public class UsersController : BaseApiController
             if (result.Error != null) return BadRequest(result.Error.Message);            
         }
 
-        user.Photos.Remove(photo);
+        this._unityOfWork.PhotoRepository.RemovePhoto(photo);       
+        
         if (await this._unityOfWork.Complete()) return Ok();
 
         return BadRequest("Problem deleting photo");

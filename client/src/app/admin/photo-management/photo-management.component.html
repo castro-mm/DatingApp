@@ -1,1 +1,9 @@
-<p>photo-management works!</p>
+<ul *ngIf="photos && photos.length > 0">
+    <li *ngFor="let photo of photos">
+        {{photo.id}} - {{photo.url}} - {{photo.username}}
+        &nbsp;
+        <button (click)="approvePhoto(photo.id)" class="btn btn-success">Approve</button>
+        &nbsp;
+        <button (click)="rejectPhoto(photo.id)" class="btn btn-danger">Reject</button>
+    </li>
+</ul>

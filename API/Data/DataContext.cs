@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using API.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -13,6 +14,7 @@ public class DataContext : IdentityDbContext<AppUser, AppRole, int, IdentityUser
            
     }
 
+    public DbSet<Photo> Photos { get; set; }
     public DbSet<UserLike> Likes { get; set; }
     public DbSet<Message> Messages { get; set; }
     public DbSet<Group> Groups { get; set; }
@@ -22,10 +24,10 @@ public class DataContext : IdentityDbContext<AppUser, AppRole, int, IdentityUser
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<AppUser>()
+        modelBuilder.Entity<AppUser>().HasQueryFilter(u => u.Photos.Where(p => p.IsApproved).Count() > 0)
             .HasMany(ur => ur.UserRoles)
             .WithOne(u => u.User)
-            .HasForeignKey(ur => ur.UserId)
+            .HasForeignKey(ur => ur.UserId)            
             .IsRequired();
 
         modelBuilder.Entity<AppRole>()
